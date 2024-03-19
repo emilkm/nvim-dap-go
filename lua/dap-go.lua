@@ -86,14 +86,6 @@ local function setup_go_configuration(dap, configs)
     },
     {
       type = "go",
-      name = "Attach",
-      mode = "local",
-      request = "attach",
-      processId = filtered_pick_process,
-      buildFlags = configs.delve.build_flags,
-    },
-    {
-      type = "go",
       name = "Debug test",
       request = "launch",
       mode = "test",
@@ -107,6 +99,27 @@ local function setup_go_configuration(dap, configs)
       mode = "test",
       program = "./${relativeFileDirname}",
       buildFlags = configs.delve.build_flags,
+    },
+    { -- >>> divider >>>
+      name = "----- ↓ attach ↓ -----",
+      type = "",
+      request = "attach",
+    }, -- <<< divider <<<
+    {
+      type = "go",
+      name = "Attach (local)",
+      mode = "local",
+      request = "attach",
+      processId = filtered_pick_process,
+      buildFlags = configs.delve.build_flags,
+    },
+    {
+      type = "go",
+      name = "Attach (remote)",
+      mode = "remote",
+      request = "attach",
+      host = "127.0.0.1",
+      port = "2345",
     },
   }
 
