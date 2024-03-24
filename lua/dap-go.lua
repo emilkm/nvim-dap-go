@@ -49,11 +49,12 @@ local function setup_delve_adapter(dap, config)
 
   dap.adapters.go = {
     type = "server",
-    port = config.delve.port,
-    executable = {
-      command = config.delve.path,
-      args = args,
-    },
+    port = 2345,
+    --port = config.delve.port,
+    --executable = {
+    --  command = config.delve.path,
+    --  args = args,
+    --},
     options = {
       initialize_timeout_sec = config.delve.initialize_timeout_sec,
     },
@@ -118,7 +119,6 @@ local function setup_go_configuration(dap, configs)
       name = "Attach (remote)",
       mode = "remote",
       request = "attach",
-      host = "127.0.0.1",
       port = "2345",
     },
   }
