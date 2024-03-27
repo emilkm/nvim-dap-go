@@ -44,17 +44,31 @@ local function filtered_pick_process()
 end
 
 local function setup_delve_adapter(dap, config)
-  local args = { "dap", "-l", "127.0.0.1:" .. config.delve.port }
-  vim.list_extend(args, config.delve.args)
+  local args_go = { "dap", "-l", "127.0.0.1:" .. config.delve.port }
+  local args_dlv = { "connect", "127.0.0.1:2345" }
+
+  vim.list_extend(args_go, config.delve.args)
 
   dap.adapters.go = {
     type = "server",
+    port = config.delve.port,
+    executable = {
+      command = config.delve.path,
+      args = args_go,
+    },
+    options = {
+      initialize_timeout_sec = config.delve.initialize_timeout_sec,
+    },
+  }
+
+  dap.adapters.dlv = {
+    type = "server",
+    host = "127.0.0.1",
     port = 2345,
-    --port = config.delve.port,
-    --executable = {
-    --  command = config.delve.path,
-    --  args = args,
-    --},
+    executable = {
+      command = config.delve.path,
+      args = args_dlv,
+    },
     options = {
       initialize_timeout_sec = config.delve.initialize_timeout_sec,
     },
@@ -115,7 +129,7 @@ local function setup_go_configuration(dap, configs)
       buildFlags = configs.delve.build_flags,
     },
     {
-      type = "go",
+      type = "dlv",
       name = "Attach (remote)",
       mode = "remote",
       request = "attach",
